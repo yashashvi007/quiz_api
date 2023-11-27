@@ -6,7 +6,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
+
+  has_many :user_assesments
+  has_many :assesments, through: :user_assesments
+
+  enum :role, [:super_admin , :admin , :student]
+
   def jwt_payload
    super
   end
+
 end
