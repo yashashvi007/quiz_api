@@ -10,15 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_20_182614) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_01_150319) do
   create_table "assesments", force: :cascade do |t|
     t.string "title"
     t.integer "duration"
     t.integer "difficulty_level"
     t.boolean "is_archived"
-    t.time "scheduled_at"
+    t.datetime "scheduled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "end_time"
+    t.integer "user_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -31,29 +33,44 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_182614) do
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.integer "assesment_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assesment_id"], name: "index_feedbacks_on_assesment_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
+  end
+
   create_table "options", force: :cascade do |t|
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "option"
     t.integer "question_id"
+    t.boolean "is_correct"
     t.index ["question_id"], name: "index_options_on_question_id"
   end
 
   create_table "questions", force: :cascade do |t|
     t.string "text"
-    t.string "correct_answer"
+    t.integer "correct_answer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "assesment_id"
     t.index ["assesment_id"], name: "index_questions_on_assesment_id"
   end
 
+  create_table "questions_tags", id: false, force: :cascade do |t|
+    t.integer "question_id", null: false
+    t.integer "tag_id", null: false
+    t.index ["question_id", "tag_id"], name: "index_questions_tags_on_question_id_and_tag_id"
+  end
+
   create_table "responses", force: :cascade do |t|
     t.integer "assesment_id", null: false
     t.integer "question_id", null: false
     t.integer "user_id", null: false
-    t.boolean "is_correct"
     t.string "option"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,11 +79,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_182614) do
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_assesments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "assesment_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "attended", default: false
+    t.integer "score"
     t.index ["assesment_id"], name: "index_user_assesments_on_assesment_id"
     t.index ["user_id"], name: "index_user_assesments_on_user_id"
   end
@@ -87,6 +112,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_182614) do
   end
 
   add_foreign_key "companies", "users"
+  add_foreign_key "feedbacks", "assesments"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "options", "questions"
   add_foreign_key "questions", "assesments"
   add_foreign_key "responses", "assesments"

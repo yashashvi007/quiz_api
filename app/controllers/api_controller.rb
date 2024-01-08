@@ -1,4 +1,4 @@
-class ApiController < ApplicationController 
+class ApiController < ApplicationController
   before_action :authenticate_user! 
 
   rescue_from CanCan::AccessDenied do |exception|

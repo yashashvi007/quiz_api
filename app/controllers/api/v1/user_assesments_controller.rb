@@ -1,9 +1,12 @@
 class Api::V1::UserAssesmentsController < ApiController 
   def index
-    @user_assesments = UserAssesment.includes(:assesment).where(user_id: current_user.id)
+  
+    @user_assesments_attended = UserAssesment.includes(:assesment).where(user_id: current_user.id).and(UserAssesment.where(attended: true))
+    @user_assesments_not_attended = UserAssesment.includes(:assesment).where(user_id: current_user.id).and(UserAssesment.where(attended: false))
 
     render json: {
-      user_assesments: @user_assesments.as_json(include: { assesment: { only: [:id, :duration , :difficulty_level] } })
+      user_assesments_attended: @user_assesments_attended.as_json(include: { assesment: { only: [:id, :duration , :difficulty_level] } }),
+      user_assesments_not_attended: @user_assesments_not_attended.as_json(include: { assesment: { only: [:id, :duration , :difficulty_level] } })
     }
   end
 

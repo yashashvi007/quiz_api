@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  assesment: one
+  user: one
+
+two:
+  assesment: two
+  user: two
