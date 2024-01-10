@@ -1,0 +1,1 @@
+json.user_assesment(@user_assesment , :id , :assesment , :user , :attended )

@@ -7,32 +7,19 @@ class Api::V1::AssesmentsController < ApiController
 
   def index 
     @assessments = Assesment.includes(:questions).all
-    # render json: @assessments.as_json(include: { questions: { only: [:id, :text] } }), status: :ok
   end
 
   def show
     @assesment = Assesment.includes(questions: :options).find(params[:id]) 
-    render json: @assesment.as_json(
-        include: { 
-            questions: { 
-              only: [:id, :text] , 
-              include: {
-                options: {
-                  only: [:id, :option]
-                }
-              }
-            } 
-          }
-        ), status: :ok
   end
 
   
   def create
-    @assesment = Assesment.new(assesment_params)
+    @assesment = Assesment.new(assesment_params) 
     @assesment.user_id = current_user.id   
 
     if @assesment.save!  
-      render json: @assesment, status: :ok
+      @assesment 
     else 
       render json: {
         data: @assesment.errors.full_messages, 
@@ -45,7 +32,7 @@ class Api::V1::AssesmentsController < ApiController
   def update
     @assesment = Assesment.find(params[:id])
     if @assesment.update(assesment_params)
-      render json: @assesment, status: :ok
+      @assesment
     else 
       render json: {
         data: @assesment.errors.full_messages, 
@@ -77,6 +64,4 @@ class Api::V1::AssesmentsController < ApiController
   def handle_record_not_found
     render json: { message: exception.message }, status: :not_found
   end
-
-
 end 

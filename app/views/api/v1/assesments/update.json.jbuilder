@@ -1,0 +1,1 @@
+json.assesment(@assesment, :id , :title , :duration, :difficulty_level , :is_archived )
