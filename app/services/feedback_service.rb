@@ -16,10 +16,10 @@ class FeedbackService
       x[:question] = question 
       x[:correct_answer] = Option.find(question.options.where(is_correct: true).pluck(:id))
       x[:your_response] = Option.find(eval(response.option))
-      res.push(x) 
-    end 
+      res.push(x)  
+    end  
 
-    return res
+    return res 
   end 
 
 end 

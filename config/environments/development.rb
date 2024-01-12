@@ -54,7 +54,16 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:         'smtp.gmail.com',
+    port:            587,
+    domain:          'gmail.com',
+    user_name:       'yashashvimaurya@gmail.com',
+    password:        'lrwv hylx layo ncje',
+    authentication:  'plain',
+    enable_starttls: true,
+  }
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

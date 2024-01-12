@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
 
   private 
   def respond_with(resource, options={})
-    
+    UserMailer.welcome_email(resource).deliver_later
     render json: {
       status: {
         code: 200, message: 'User signed in successfully',
