@@ -14,12 +14,18 @@ Rails.application.routes.draw do
   namespace :api do 
     namespace :v1 do  
       resources :assesments do  
-        resources :questions
-        resources :answers  , only: [:create]
-        resources :feedback , only: [:create, :index]  
+        resources :questions do 
+          resources :tags , only: [:create , :index , :show]
+        end 
+        resources :answers  , only: [:create] 
+        resources :feedback , only: [:create, :index]   
+        
       end  
-      resources :user_assesments , only: [:index ,:new , :create , :show]
+      resources :user_assesments  
+
     end 
   end 
+
+  resources :tags , only: [:update]
   mount Sidekiq::Web => '/sidekiq'
 end

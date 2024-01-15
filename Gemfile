@@ -55,3 +55,5 @@ gem "rails-erd", "~> 1.7"
 gem 'sidekiq'
 gem 'jbuilder', '~> 2.7'
 gem "faker", "~> 3.2"
+gem 'kaminari'
+gem "pagy", "~> 6.3"

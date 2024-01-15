@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :user_assesments
   has_many :assesments, through: :user_assesments
 
+  before_create :set_default_role
 
   enum :role, [:super_admin , :admin , :student]
 
@@ -19,6 +20,11 @@ class User < ApplicationRecord
 
   def jwt_token
     JWT.encode(jwt_payload, Rails.application.credentials.secret_key_base)
+  end
+
+
+  def set_default_role
+    self.role ||= :student
   end
 
 end

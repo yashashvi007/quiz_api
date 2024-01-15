@@ -27,5 +27,8 @@ module AuthApi
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
     config.active_job.queue_adapter = :sidekiq
+    config.action_dispatch.rescue_responses.merge!(
+        'ActiveRecord::RecordNotFound' => :not_found
+      )
   end
 end

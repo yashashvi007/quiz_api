@@ -6,7 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private  
   def respond_with(resource, options={})
     if resource.persisted? 
-      UserMailer.with(user: resource).welcome_email.deliver_now
+      UserMailer.welcome_email(resource).deliver_later
       render json: {
         status: { code: 200, message: 'Signed up successfully', data: resource}
       }, status: :ok  
@@ -19,4 +19,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
       }  
     end  
   end 
-end 
+end
