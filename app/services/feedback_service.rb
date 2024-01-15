@@ -9,7 +9,7 @@ class FeedbackService
   def give_feedback 
     res = [] 
     responses =  Response.where("user_id = ? AND assesment_id = ?" , @current_user.id , @assesment_id)
-    
+  
     responses.each do |response| 
       question = response.question  
       x = {} 

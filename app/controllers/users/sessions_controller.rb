@@ -5,13 +5,24 @@ class Users::SessionsController < Devise::SessionsController
 
   private 
   def respond_with(resource, options={})
-    UserMailer.welcome_email(resource).deliver_later
-    render json: {
-      status: {
-        code: 200, message: 'User signed in successfully',
-        data: current_user
-      }
-    }, status: :ok
+      if user_signed_in?
+        render json: {
+          status: {
+            code: 200, 
+            message: 'User is already signed in',
+            data: current_user
+          }
+        }, status: :ok
+      else
+        UserMailer.welcome_email(resource).deliver_later
+        render json: {
+          status: {
+            code: 200, 
+            message: 'User signed in successfully',
+            data: current_user
+          }
+        }, status: :ok
+      end
   end
 
   def respond_to_on_destroy

@@ -19,14 +19,15 @@ class AnswersService
       end
       res = Response.new(assesment_id: @params[:assesment_id], question_id: res[:question_id], user_id: @user.id ,  option: res[:options_choosen])
       res.save
+     
     end
     return wrong,correct,improvement_tags
   end   
 
-  def mark_attended_true
+  def mark_attended_true(correct)
     user_assesment =  UserAssesment.find_by(user_id: @user.id , assesment_id: @params[:assesment_id])
     user_assesment.attended = true 
+    user_assesment.score = correct
     user_assesment.save
   end
-
 end 

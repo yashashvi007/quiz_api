@@ -1,2 +1,9 @@
+json.pagination do
+  json.extract! @pagination,  :count, :page, :next
+end
+
 json.assesment(@assesment , :id, :title , :duration)
-json.questions(@assesment.questions, :id , :text , :options)
+
+json.data do
+  json.array! @questions
+end
