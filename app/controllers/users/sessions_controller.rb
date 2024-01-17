@@ -5,15 +5,6 @@ class Users::SessionsController < Devise::SessionsController
 
   private 
   def respond_with(resource, options={})
-      if user_signed_in?
-        render json: {
-          status: {
-            code: 200, 
-            message: 'User is already signed in',
-            data: current_user
-          }
-        }, status: :ok
-      else
         UserMailer.welcome_email(resource).deliver_later
         render json: {
           status: {
@@ -22,12 +13,12 @@ class Users::SessionsController < Devise::SessionsController
             data: current_user
           }
         }, status: :ok
-      end
+    
   end
 
   def respond_to_on_destroy
     jwt_payload = JWT.decode(request.headers['Authorization'].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
-    current_user = User.find(jwt_payload['sub'])
+    current_user = User.find(jwt_payload['sub']) 
     if current_user 
       render json: {
         status: 200, 
