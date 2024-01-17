@@ -21,9 +21,6 @@ class Api::V1::TagsController < ApiController
     render json: { question: @question, tags: @question.tags }
   end
 
-  def update
-    
-  end
 
   private
 

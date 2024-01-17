@@ -2,8 +2,8 @@ class Api::V1::UserAssesmentsController < ApiController
   load_and_authorize_resource 
 
   def index
-    @user_assesments_attended = UserAssesment.where(["user_id = ? and attended = ?", current_user.id , true])
-    @user_assesments_not_attended = UserAssesment.where(["user_id = ? and attended = ?", current_user.id , false])
+    @user_assesments_attended = UserAssesment.user_assesment_attempted(current_user.id , true)
+    @user_assesments_not_attended = UserAssesment.user_assesment_attempted(current_user.id , false)
   end
 
   def create

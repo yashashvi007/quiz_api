@@ -1,14 +1,15 @@
 class FeedbackService
 
   def initialize(assesment_id , current_user)
-    @current_user = current_user
-    @assesment_id = assesment_id
-    @user_assesments = UserAssesment.where("user_id = ? AND assesment_id = ? AND attended = ?", current_user.id, assesment_id , true)
+    @current_user = current_user 
+    @assesment_id = assesment_id 
+    
+    @user_assesments = UserAssesment.user_assesment_already_finished(current_user.id , assesment_id , true)
   end
 
   def give_feedback 
     res = [] 
-    responses =  Response.where("user_id = ? AND assesment_id = ?" , @current_user.id , @assesment_id)
+    responses =  Response.user_response_for_assesment(@current_user.id , @assesment_id)
   
     responses.each do |response| 
       question = response.question  

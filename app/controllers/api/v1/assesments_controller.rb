@@ -1,5 +1,5 @@
 class Api::V1::AssesmentsController < ApiController
-  load_and_authorize_resource only: [:index, :show, :create]
+  load_and_authorize_resource only: [:index, :show, :update , :create , :destroy]
 
   include Pagy::Backend
 
@@ -26,7 +26,7 @@ class Api::V1::AssesmentsController < ApiController
 
   def update
     begin
-      @assesment = Assesment.find!(params[:id])
+      @assesment = Assesment.find(params[:id])
       @assesment.update!(assesment_params)
     rescue ActiveRecord::RecordNotFound
       render_error_response("Assessment not found", :not_found)

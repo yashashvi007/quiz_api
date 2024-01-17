@@ -8,6 +8,7 @@ class AnswersService
     improvement_tags = []
     correct = 0 
     wrong = 0
+    
     @params[:answers].each do |res|
       question = Question.find res[:question_id]  
       correct_answer = question.options.where(is_correct:true).pluck(:id)
@@ -21,6 +22,7 @@ class AnswersService
       res.save
      
     end
+   
     return wrong,correct,improvement_tags
   end   
 

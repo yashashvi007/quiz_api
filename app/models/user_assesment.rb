@@ -7,4 +7,7 @@ class UserAssesment < ApplicationRecord
   validates :attended, inclusion: { in: [true, false] }
 
   validates :assesment_id, uniqueness: {scope: :user_id}
+
+  scope :user_assesment_attempted , ->(user_id , attended) { where(["user_id = ? and attended = ?" , user_id , attended])}
+  scope :user_assesment_already_finished, ->(user_id , assesment_id , attended) {where(["user_id = ? and assesment_id = ? and attended = ?", user_id, assesment_id , attended])}
 end
