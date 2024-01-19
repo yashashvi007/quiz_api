@@ -10,7 +10,7 @@ class Users::SessionsController < Devise::SessionsController
           status: {
             code: 200, 
             message: 'User signed in successfully',
-            data: current_user
+            data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
           }
         }, status: :ok
     

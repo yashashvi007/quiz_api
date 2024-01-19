@@ -1,4 +1,4 @@
-class RemainderJob
+class MailingJob
   include Sidekiq::Job
   
   queue_as :high_priority
