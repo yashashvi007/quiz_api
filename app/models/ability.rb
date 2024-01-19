@@ -25,7 +25,7 @@ class Ability
       
     elsif user.student? 
       can :read, Assesment 
-      can :read , UserAssesment , user_id: user.id
+      can :read , UserAssesment, user_id: user.id
       can :create , Response
       can :read , Tag
     end

@@ -1,7 +1,5 @@
 class Api::V1::QuestionsController < ApiController 
-
-  load_and_authorize_resource only: [:index, :update , :destroy]
-
+  # load_and_authorize_resource only: [:index, :update,:create,:destroy]
   before_action :set_assesment, only: [:index , :show]
 
   include Pagy::Backend
@@ -19,11 +17,11 @@ class Api::V1::QuestionsController < ApiController
   end  
 
   def show
-    @question = Question.includes(:options).find(params[:id])
+    @question = Question.includes(:options).find(id: params[:id])
   end
 
   def destroy
-      @question = Question.find(params[:id])
+      @question = Question.find_by(id: params[:id])
 
       if @question.destroy
         render json: { message: 'Question deleted successfully' }, status: :ok

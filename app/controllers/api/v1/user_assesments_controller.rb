@@ -8,12 +8,13 @@ class Api::V1::UserAssesmentsController < ApiController
 
   def create
     @user_assesment = UserAssesment.new(user_assesment_params)
+    @assesment = Assesment.find(params[:user_assesment][:assesment_id])
 
-    if @user_assesment.save
-      render json: @user_assesment
-    else
-      render_error_response(@user_assesment.errors.full_messages, :unprocessable_entity)
-    end
+     if @user_assesment.save
+       render json: @user_assesment
+     else
+       render_error_response(@user_assesment.errors.full_messages, :unprocessable_entity)
+     end
   end
 
 
