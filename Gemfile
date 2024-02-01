@@ -41,6 +41,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem "rspec-rails", "~> 6.1"  
   gem "factory_bot_rails", "~> 6.4"
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 group :development do
@@ -58,3 +59,4 @@ gem "faker", "~> 3.2"
 gem 'kaminari'
 gem "pagy", "~> 6.3"
 gem "jsonapi-serializer", "~> 2.2"
+gem 'rubocop', '~> 1.60', require: false

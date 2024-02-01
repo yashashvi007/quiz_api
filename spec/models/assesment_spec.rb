@@ -1,27 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe Assesment, type: :model do
+  describe 'associations' do
+    it { should have_many(:questions).dependent(:destroy) }
+    it { should have_many(:user_assesments) }
+    it { should have_many(:users).through(:user_assesments) }
+  end
 
-  let(:assesment) {build(:assesment)}
+  describe 'validations' do
+    it { should validate_presence_of(:title) }
+    it { should validate_uniqueness_of(:title) }
+    it { should validate_presence_of(:duration) }
+    it { should validate_numericality_of(:duration).only_integer.is_greater_than(0) }
+    it { should validate_presence_of(:difficulty_level) }
+  end
 
-  describe "association validation" do 
-    it 'should validate' do 
-      expect(assesment).to be_valid
+  describe 'callbacks' do
+    it 'sets end_time before create' do
+      assesment = create(:assesment, scheduled_at: Time.current, duration: 60)
+      expect(assesment.end_time).to eq(assesment.scheduled_at + 60.minutes)
     end
-    context 'when title is empty' do 
-      let(:assesment) {build(:assesment, title: nil)}
-      it 'is not valid with title nil' do 
-        expect(assesment).to_not be_valid
-      end
-    end
-
-
-    context 'when title is empty' do 
-      let(:assesment) {build(:assesment, duration: nil)}
-      it 'should not be valid with duration nil' do 
-        expect(assesment).to_not be_valid
-      end 
-    end
-
-  end 
-end 
+  end
+end

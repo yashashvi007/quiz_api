@@ -4,9 +4,9 @@ class Api::V1::AssesmentsController < ApiController
   include Pagy::Backend
 
   def index  
-      data = Assesment.includes(:questions).all 
-      @pagy, @assesments = pagy(data, items: params[:per_page] , page: params[:page] || 1)
-      @pagination = pagy_metadata(@pagy)
+    data = Assesment.includes(:questions).where(is_archived: false)
+    @pagy, @assesments = pagy(data, items: params[:per_page] , page: params[:page] || 1)
+    @pagination = pagy_metadata(@pagy)
   end
 
   def show
@@ -37,21 +37,16 @@ class Api::V1::AssesmentsController < ApiController
 
   def destroy
     @assesment = Assesment.find_by(id: params[:id])
-
-    if @assesment.nil?
-      render_error_response("Assessment not found", :not_found)
+    @assesment&.is_archived = true
+    
+    if @assesment.save(validate: false)
+      @assesment
     else
-      begin
-        @assesment.destroy!
-        head :no_content
-      rescue StandardError => e
-        render_error_response(e.message, :unprocessable_entity)
-      end
+      render_error_response("Assessment not found", :not_found)
     end
   end
 
   private
-
   def assesment_params
     params.require(:assesment).permit(:title, :duration, :difficulty_level, :is_archived, :scheduled_at, :end_time)
   end

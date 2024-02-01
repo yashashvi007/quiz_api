@@ -7,4 +7,3 @@ class Api::V1::FeedbackController < ApiController
     }
   end
 end  
-

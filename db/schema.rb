@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_17_164320) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_25_162940) do
   create_table "assesments", force: :cascade do |t|
     t.string "title"
     t.integer "duration"
@@ -54,10 +54,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_17_164320) do
 
   create_table "questions", force: :cascade do |t|
     t.string "text"
-    t.integer "correct_answer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "assesment_id"
+    t.boolean "is_archived", default: false
     t.index ["assesment_id"], name: "index_questions_on_assesment_id"
   end
 
