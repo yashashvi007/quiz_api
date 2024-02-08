@@ -42,6 +42,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.1"  
   gem "factory_bot_rails", "~> 6.4"
   gem 'shoulda-matchers', '~> 5.0'
+  gem 'rubocop'
 end
 
 group :development do
@@ -59,4 +60,5 @@ gem "faker", "~> 3.2"
 gem 'kaminari'
 gem "pagy", "~> 6.3"
 gem "jsonapi-serializer", "~> 2.2"
-gem 'rubocop', '~> 1.60', require: false
+gem 'database_cleaner'
+gem 'rails-controller-testing'

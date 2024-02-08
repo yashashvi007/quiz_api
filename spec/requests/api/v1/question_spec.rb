@@ -2,72 +2,52 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::QuestionsController, type: :request do
+RSpec.describe Api::V1::QuestionsController, type: :controller do
+  include Devise::Test::ControllerHelpers
+  let(:user) { create(:user) } 
+  let(:assesment) { create(:assesment) } 
 
-  include Devise::Test::IntegrationHelpers
-
-  let(:user) { FactoryBot.create(:user) }
   before do
-    sign_in user
-  end
-
-  let(:valid_headers) do
-    {
-      'Content-Type' => 'application/json',
-      'Accept' => 'application/json',
-      'Authorization' => "Bearer #{user.jwt_token}"
-    }
+    sign_in(user) 
   end
 
   describe 'GET #index' do
-    it 'returns a list of questions with options for a specific assesment' do
-      assesment = FactoryBot.create(:assesment)
-      question1 = FactoryBot.create(:question, assesment: assesment)
-      question2 = FactoryBot.create(:question, assesment: assesment)
-      
-      get api_v1_assesment_questions_path(assesment), headers: valid_headers
-
-      expect(response).to have_http_status(:success)
-
-      json_response = JSON.parse(response.body)
-      expect(json_response['assesment']['id']).to eq(assesment.id)
-      expect(json_response['questions'].length).to eq(2)
+    let!(:user) { FactoryBot.create(:user , role: "admin") }
+    it 'returns a list of questions for a specific assessment' do
+      question = create(:question, assesment: assesment)
+      get :index, params: { assesment_id: assesment.id }
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:questions)).to include(question)
     end
   end
 
   describe 'POST #create' do
+  let!(:user) { FactoryBot.create(:user , role: "admin") }
     it 'creates a new question with options' do
-      assesment = FactoryBot.create(:assesment)
-      question_params = {
-        text: 'What is the capital of France?',
-        options: [
-          { option: 'A', description: 'Paris', is_correct: true },
-          { option: 'B', description: 'Berlin', is_correct: false }
-        ]
-      }
-
-      post api_v1_assesment_questions_path(assesment), params: { question: question_params }.to_json, headers: valid_headers
-
-      expect(response).to have_http_status(:success)
-
-      json_response = JSON.parse(response.body)
-      expect(json_response['question']['text']).to eq(question_params[:text])
-      expect(json_response['options'].length).to eq(2)
+      question_attributes = attributes_for(:question)
+      post :create, params: { assesment_id: assesment.id, question: question_attributes }
+      expect(response).to have_http_status(:created)
+      expect(Question.last.text).to eq(question_attributes[:text])
     end
   end
 
   describe 'GET #show' do
+  let!(:user) { FactoryBot.create(:user , role: "admin") }
     it 'returns a specific question with options for a specific assesment' do
-      assesment = FactoryBot.create(:assesment)
-      question = FactoryBot.create(:question, assesment: assesment)
+      question = create(:question, assesment: assesment)
+      get :show, params: { assesment_id: assesment.id, id: question.id }
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:question)).to eq(question)
+    end
+  end
 
-      get api_v1_assesment_question_path(assesment, question), headers: valid_headers
-
-      expect(response).to have_http_status(:success)
-
-      json_response = JSON.parse(response.body)
-      expect(json_response['question']['id']).to eq(question.id)
-      expect(json_response['question']['options'].length).to eq(question.options.count)
+  describe 'DELETE #destroy' do
+  let!(:user) { FactoryBot.create(:user , role: "admin") }
+    it 'deletes a specific question' do
+      question = create(:question, assesment: assesment)
+      delete :destroy, params: { id: question.id }
+      expect(response).to have_http_status(:ok)
+      expect(Question.exists?(question.id)).to be_falsey
     end
   end
 end

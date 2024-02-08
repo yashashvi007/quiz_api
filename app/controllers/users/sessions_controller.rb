@@ -5,6 +5,7 @@ class Users::SessionsController < Devise::SessionsController
 
   private 
   def respond_with(resource, options={})
+        
         UserMailer.welcome_email(resource).deliver_later
         render json: {
           status: {
@@ -16,6 +17,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
+    
     jwt_payload = JWT.decode(request.headers['Authorization'].split(' ')[1], Rails.application.credentials.fetch(:secret_key_base)).first
     current_user = User.find(jwt_payload['sub']) 
     if current_user 
