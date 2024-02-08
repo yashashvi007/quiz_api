@@ -6,7 +6,10 @@ module ErrorHandling
     rescue_from StandardError, with: :handle_standard_error
     rescue_from CanCan::AccessDenied, with: :handle_permission_denied
     rescue_from ActiveRecord::RecordInvalid do |e|
-      render json: e.message
+      
+      render json: {
+        message: e.message
+      }, status: :unprocessable_entity
     end
   end
 
@@ -17,10 +20,12 @@ module ErrorHandling
   end
 
   def handle_record_not_found(exception)
+    debugger
     render json: { message: exception.message }, status: :not_found
   end
 
   def handle_standard_error(exception) 
+    debugger
     render json: { error: 'Internal Server Error', message: exception.to_s }, status: :internal_server_error
   end
 end

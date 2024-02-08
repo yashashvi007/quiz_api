@@ -1,11 +1,11 @@
 class Api::V1::QuestionsController < ApiController 
-  # load_and_authorize_resource only: [:index, :update,:create,:destroy]
+  load_and_authorize_resource only: [:index, :update, :create,:destroy]
   before_action :set_assesment, only: [:index , :show]
 
   include Pagy::Backend
 
   def index 
-     items_per_page = 5
+    #  items_per_page = 5
      data = @assesment.questions.includes(:options).all
      @pagy, @questions  = pagy(data, items: params[:per_page] , page: params[:page] || 1)
      @pagination = pagy_metadata(@pagy)
@@ -16,13 +16,25 @@ class Api::V1::QuestionsController < ApiController
     create_options(params[:question][:options], @question) if @question.valid?  
   end  
 
+  # def create
+  #   @question = Question.new(question_params)
+
+  #   if @question.save
+  #     params[:question][:options].each do |option| 
+        
+  #     end
+  #   end
+  # end
+
   def show
     @question = Question.includes(:options).find(id: params[:id])
   end
 
+ 
+
   def destroy
       @question = Question.find_by(id: params[:id])
-
+      
       if @question.destroy
         render json: { message: 'Question deleted successfully' }, status: :ok
       else
@@ -33,6 +45,10 @@ class Api::V1::QuestionsController < ApiController
   private 
   def set_assesment
     @assesment = Assesment.find_by(id: params[:assesment_id])
+  end
+
+  def question_params
+    params.require(:question).permit(:text)
   end
 
   def create_options(options_params, question)

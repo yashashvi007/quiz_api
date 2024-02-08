@@ -22,7 +22,6 @@ class User < ApplicationRecord
     JWT.encode(jwt_payload, Rails.application.credentials.secret_key_base)
   end
 
-
   def set_default_role
     self.role ||= :student
   end
